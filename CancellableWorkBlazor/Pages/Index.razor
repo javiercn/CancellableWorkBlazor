@@ -1,0 +1,22 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<button @onclick="Toggle">Toggle component</button>
+@if (_visible)
+{
+    <LongRunning />
+}
+
+@code{
+    private bool _visible = true;
+
+    public void Toggle()
+    {
+        _visible = !_visible;
+    }
+}

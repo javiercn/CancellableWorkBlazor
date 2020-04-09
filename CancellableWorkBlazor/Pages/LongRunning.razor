@@ -1,0 +1,40 @@
+﻿@implements IDisposable
+<button @onclick="LongRunningWork">Trigger long running work</button>
+
+@code {
+    private Resource _resource = new Resource();
+
+    protected async Task LongRunningWork()
+    {
+        await Task.Delay(5000);
+        _resource.Dispose();
+    }
+
+    public void Dispose()
+    {
+        _resource?.Dispose();
+    }
+
+    private class Resource : IDisposable
+    {
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(Resource));
+            }
+
+            _disposed = true;
+        }
+
+        public void DoSomething()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(Resource));
+            }
+        }
+    }
+}
