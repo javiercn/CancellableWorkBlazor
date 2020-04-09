@@ -1,17 +1,20 @@
 ﻿@implements IDisposable
+@using System.Threading
 <button @onclick="LongRunningWork">Trigger long running work</button>
 
 @code {
     private Resource _resource = new Resource();
-
+    private CancellationTokenSource _cts = new CancellationTokenSource();
     protected async Task LongRunningWork()
     {
-        await Task.Delay(5000);
-        _resource.Dispose();
+        await Task.Delay(5000, _cts.Token);
+        _cts.Token.ThrowIfCancellationRequested();
+        _resource.DoSomething();
     }
 
     public void Dispose()
     {
+        _cts.Cancel();
         _resource?.Dispose();
     }
 
